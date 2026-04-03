@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AHWC PLP Report</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  background: #f5f5f5;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 15px;
+  border: 1px solid black;
+}
+h2, h3 {
+  text-align: center;
+}
+input, select {
+  width: 100%;
+  padding: 4px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+th, td {
+  border: 1px solid black;
+  padding: 4px;
+  text-align: center;
+}
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+.small {
+  font-size: 10px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="report">
+
+<h3>आयुष्मान आरोग्य मंदिर (PLP रिपोर्ट)</h3>
+
+<label>AHWC NAME</label>
+<input id="name">
+
+<label>जिला</label>
+<input id="district">
+
+<label>माह (जैसे: फरवरी 2026)</label>
+<input id="month">
+
+<h4>कार्य विवरण</h4>
+
+<table id="table1">
+<thead>
+<tr>
+<th>क्र.</th>
+<th>कार्य</th>
+<th>लक्ष्य</th>
+<th>प्राप्ति</th>
+<th>%</th>
+<th>राशि</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<h4>कर्मचारी विवरण</h4>
+
+<table id="table2">
+<thead>
+<tr>
+<th>क्र.</th>
+<th>नाम</th>
+<th>पद</th>
+<th>भुगतान</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<p id="total"></p>
+
+<p>
+प्रमाणित किया जाता है कि उपर्युक्त सूची में अंकित AMO , नर्स- कंपाउंडर , ए.एन.एम. व आशा कार्मिको द्वारा माह फरवरी 2026 में कार्य किया गया है।
+</p>
+
+<p>
+हस्ताक्षर प्रभारी अधिकारी<br>
+AHWC -
+</p>
+
+<button onclick="downloadPDF()">Generate PDF</button>
+
+<p class="small">Made By Peeyush Singh</p>
+
+</div>
+
+<script>
+const karya = [
+"ओपीडी","प्रकृति परीक्षण","पेनलबद्ध व्यक्ति",
+"उच्च रक्तचाप परीक्षण","मधुमेह परीक्षण",
+"मधुमेह परीक्षण 2","उपचार अनुपात",
+"अभियान","ब्रोशर","बैठक"
+];
+
+let tbody = document.querySelector("#table1 tbody");
+
+karya.forEach((k,i)=>{
+  let row = `<tr>
+<td>${i+1}</td>
+<td>${k}</td>
+<td><input type="number" class="target"></td>
+<td><input type="number" class="ach"></td>
+<td class="per">0</td>
+<td class="amt">0</td>
+</tr>`;
+  tbody.innerHTML += row;
+});
+
+document.addEventListener("input", calc);
+
+function calc(){
+let targets = document.querySelectorAll(".target");
+let ach = document.querySelectorAll(".ach");
+let per = document.querySelectorAll(".per");
+let amt = document.querySelectorAll(".amt");
+
+let total = 0;
+
+for(let i=0;i<10;i++){
+let t = targets[i].value;
+let a = ach[i].value;
+
+let p = t ? (a/t)*100 : 0;
+per[i].innerText = p.toFixed(0);
+
+let amount = 0;
+
+if(p<31) amount=0;
+else if(p<=50) amount=500*(p/100);
+else if(p<=70) amount=375;
+else amount=500;
+
+amt[i].innerText = Math.round(amount);
+total += amount;
+}
+
+document.getElementById("total").innerText =
+"कुल राशि: "+total+" / 5000";
+}
+
+function downloadPDF(){
+window.print();
+}
+</script>
+
+</body>
+</html>
